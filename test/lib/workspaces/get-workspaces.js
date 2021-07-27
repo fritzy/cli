@@ -86,6 +86,26 @@ t.test('get-workspaces', async t => {
     'should filter by package name'
   )
 
+  workspaces = await getWorkspaces(['.', 'a', 'b'], { path })
+  t.same(
+    clean(workspaces, path),
+    new Map(Object.entries({
+      x: '.',
+      a: '{PATH}/packages/a',
+      b: '{PATH}/packages/b',
+    })),
+    'should allow for . with other workspaces'
+  )
+
+  workspaces = await getWorkspaces(['.'], { path })
+  t.same(
+    clean(workspaces, path),
+    new Map(Object.entries({
+      x: '.',
+    })),
+    'should allow for . alone'
+  )
+
   workspaces = await getWorkspaces(['./packages/c'], { path })
   t.same(
     clean(workspaces, path),
